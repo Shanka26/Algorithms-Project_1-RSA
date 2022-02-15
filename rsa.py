@@ -4,21 +4,20 @@ import random
 
 
 def generatePrime(k):
-    
+    # Continue to generate random numbers and test if they are pseudo prime
     while True:
         n = random.randint(2, 200)
         if(fermatTest(n,k)):
             return n
-    # Fermat's little theorem
+    
             
 
 def fermatTest(n,k):
+    # Fermat's little theorem
     for i in range(k):             
         a = random.randint(1, n-1)   
         if pow(a, n - 1, n) != 1:
             return False
-                
-
     return True
                     
          
@@ -27,11 +26,10 @@ def fermatTest(n,k):
 def generateE(m):
    
     while True:
-             
+    
         a = random.randint(2, 100)
         if math.gcd(a,m)== 1:
             return a
-
             
     
 def extended_gcd(a=1, b =1):
@@ -61,9 +59,9 @@ def encrypt(me,e,n):
     return c
 
 def encryptString(msg):
-    encryptedString=""
+    encryptedString=[]
     for i in msg:   
-        encryptedString+=(chr(encrypt(ord(i),e,n)))
+        encryptedString.append((encrypt(ord(i),e,n)))
     return encryptedString   
     
 
@@ -75,7 +73,7 @@ def decrypt(me,d,n):
 def decryptString(msg):
     decryptedString=""
     for i in msg:   
-        de=decrypt(ord(i),d,n)
+        de=decrypt(i,d,n)
         decryptedString+=chr(de)
     return decryptedString 
 
