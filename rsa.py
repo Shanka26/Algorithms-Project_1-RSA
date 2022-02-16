@@ -6,7 +6,7 @@ import random
 def generatePrime(k):
     # Continue to generate random numbers and test if they are pseudo prime
     while True:
-        n = random.randint(2, 200)
+        n = random.randint(1000000000000000000000000000, 999999999999999999999999999999999999999999)
         if(fermatTest(n,k)):
             return n
     
@@ -27,8 +27,8 @@ def generateE(m):
    
     while True:
     
-        a = random.randint(2, 100)
-        if math.gcd(a,m)== 1:
+        a = random.randint(100000000000000000000000, 999999999999999999999999999999999999)
+        if math.gcd(a,m) == 1:
             return a
             
     
@@ -88,12 +88,24 @@ def decryptString(msg):
 
 p=generatePrime(1000)
 q=generatePrime(1000)
+# p=7
+# q=43
+# e=5
+
 n=p*q
 m=(p-1)*(q-1)
-e=generateE(m)
-
-d,a,b=extended_gcd(e,m)
 
 
-print(decryptString(encryptString("It works sometimes")))
+while True:
+    e=generateE(m)
+    d,a,b=extended_gcd(e,m)
+    try:
+        decryptString(encryptString("A"))
+        break;
+    except RecursionError:
+        print("Invalid e")
+
+
+print(str(p)+":"+str(q)+" - "+str(e))
+print(decryptString(encryptString("It works always")))
 
