@@ -6,7 +6,7 @@ import random
 def generatePrime(k):
     # Continue to generate random numbers and test if they are pseudo prime
     while True:
-        n = random.randint(10000000000000, 999999999999999999999)
+        n = random.randint(1000000, 100000000)
         if(fermatTest(n,k)):
             return n
     
@@ -27,7 +27,7 @@ def generateE(m):
    
     while True:
     
-        a = random.randint(100000000000000000000000, 999999999999999999999999999999999999)
+        a = random.randint(1000000, 100000000)
         if math.gcd(a,m) == 1:
             return a
        
@@ -98,6 +98,6 @@ n=p*q
 m=(p-1)*(q-1)
 e=generateE(m)
 d=generatePrivateKey(e,m)
-# print(str(p)+":"+str(q)+" - "+str(e))
+print("p"+str(p)+":q"+str(q)+" - e"+str(e))
 print(decryptString(encryptString("It works perfectly")))
 
