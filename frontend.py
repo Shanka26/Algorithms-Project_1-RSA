@@ -3,7 +3,7 @@ import rsa
 
 message_list = []
 def add_message(message, encrypted):
-        message_list.append([len(message_list) + 1, message, encrypted, 'Unsigned', ''])
+        message_list.append([len(message_list) + 1, message, encrypted, 'Unsigned', '', []])
 
 close_menu = ''
 
@@ -36,7 +36,8 @@ while close_menu == '':
                 #Write new message into List
                 if ask_to_encrypt == 'Y':
                     add_message(new_message, ask_to_encrypt)
-                    message_list[len(message_list) - 1][1] = rsa.encryptString(message_list[len(message_list) - 1][1])
+                    message_list[len(message_list) - 1][5] = rsa.encryptWholeString(message_list[len(message_list) - 1][1])
+                    message_list[len(message_list) - 1][1] = 'Msg encrypted as large int: ' + str( message_list[len(message_list) - 1][5][0] ) + '...'
                 else:
                     add_message(new_message, ask_to_encrypt)
                 print('Message added to list\n')
@@ -47,7 +48,7 @@ while close_menu == '':
                 else:
                     print('\nIndex | Message | Encrypted | Signed')
                     for i in message_list:
-                        print(i[0], '|', i[1][0:15], '|', i[2], '|', i[3])
+                        print(i[0], '|', i[1][0:51], '|', i[2], '|', i[3])
                     message_number = input('Select a message by number:\n')
                     message_range = []
                     for i in range(1,len(message_list)+1):
@@ -59,11 +60,10 @@ while close_menu == '':
                     if message_list[message_number-1][4] == '':
                         print('Message has no digital signature\n')
                     else:
-                        #Check the signature
-                        #
-                        #
-                        pass
-
+                        if rsa.encryptString(message_list[message_number-1][4]) == 'Signed':
+                            print('Signature valid\n')
+                        else:
+                            print('Could not validate this signature')
             elif guest_inp == '3':
                 guest_inp = 'exit'
             else:
@@ -89,7 +89,8 @@ while close_menu == '':
                 #Write new message into List
                 if ask_to_encrypt == 'Y':
                     add_message(new_message, ask_to_encrypt)
-                    message_list[len(message_list) - 1][1] = rsa.encryptString(message_list[len(message_list) - 1][1])
+                    message_list[len(message_list) - 1][5] = rsa.encryptWholeString(message_list[len(message_list) - 1][1])
+                    message_list[len(message_list) - 1][1] = 'Msg encrypted as large int: ' + str( message_list[len(message_list) - 1][5][0] ) + '...'
                 else:
                     add_message(new_message, ask_to_encrypt)
                 print('Message added to list\n')
@@ -100,7 +101,7 @@ while close_menu == '':
                 else:
                     print('\nIndex | Message | Encrypted | Signed')
                     for i in message_list:
-                        print(i[0], '|', i[1][0:15], '|', i[2], '|', i[3])
+                        print(i[0], '|', i[1][0:51], '|', i[2], '|', i[3])
                     message_number = input('Select a message by number:\n')
                     message_range = []
                     for i in range(1,len(message_list)+1):
@@ -123,13 +124,14 @@ while close_menu == '':
                             if message_list[message_number-1][4] != '':
                                 print('Message already has a digital signature\n')
                             else:
-                                #Sign Message
-                                #
-                                #
-                                pass
+                                message_list[message_number-1][4] = rsa.decryptString('Signed')
+                                message_list[message_number-1][3] = 'Signed'
+                                print('Message signed\n')
+                            message_op_inp = 'exit'
                         elif message_op_inp == '2':
                             if message_list[message_number - 1][2] == 'N':
-                                message_list[message_number - 1][1] = rsa.encryptString(message_list[message_number - 1][1])
+                                message_list[len(message_list) - 1][5] = rsa.encryptWholeString(message_list[len(message_list) - 1][1])
+                                message_list[len(message_list) - 1][1] = 'Msg encrypted as large int: ' + str( message_list[len(message_list) - 1][5][0] ) + '...'
                                 message_list[message_number - 1][2] = 'Y'
                                 print('Message encrypted:\n' + message_list[message_number - 1][1] + '\n')
                                 message_op_inp = 'exit'
@@ -137,7 +139,8 @@ while close_menu == '':
                                 print('Message was already encrypted\n')
                         elif message_op_inp == '3':
                             if message_list[message_number - 1][2] == 'Y':
-                                message_list[message_number - 1][1] = rsa.decryptString(message_list[message_number - 1][1])
+                                message_list[message_number - 1][1] = rsa.decryptWholeString(message_list[message_number - 1][5])
+                                message_list[message_number - 1][5] = []
                                 message_list[message_number - 1][2] = 'N'
                                 print('Message decrypted:\n' + message_list[message_number - 1][1] + '\n')
                                 message_op_inp = 'exit'

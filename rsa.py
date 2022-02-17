@@ -1,5 +1,7 @@
+from email import message_from_file
 import math
 import random
+from unicodedata import decimal
 
 
 
@@ -69,8 +71,34 @@ def encryptString(msg):
     for i in msg:   
         encryptedString.append((encrypt(ord(i),e,n)))
     return encryptedString   
-    
 
+def encryptWholeString(msg):
+
+    #Break string into 5-char blocks and place in list
+        #Pad message to multiple of 5 chars
+    msgLen = len(msg)
+    if msgLen % 4 != 0:
+        msg = msg + '_' * (4 - (msgLen % 4))
+    msgLen = len(msg)
+    
+        #Slice blocks of message into list
+    msgBlocks = []
+    for i in range(msgLen//4):
+        msgBlocks.append(msg[ 4*i : 4*i + 4])
+
+    #Convert each block to ints and encrypt
+    for i in range(len(msgBlocks)):
+        msgInt = '1' #Leading 1 protects leading 0s from being truncated, maintaining parable triplets
+        for j in msgBlocks[i]:
+            msgInt += '%03d' % ord(j)  #outputs the 3 digit ascii encoding of each character
+        msgBlocks[i] = int(msgInt)
+
+    #Encrypt msgBlocks
+    for i in range(len(msgBlocks)):
+        msgBlocks[i] = encrypt( msgBlocks[i], e, n)
+
+    return msgBlocks   
+    
 def decrypt(me,d,n):
     c=fastExpo_recursive(me,d,n)
     # c=pow(me,d,n) 
@@ -83,6 +111,22 @@ def decryptString(msg):
         decryptedString+=chr(de)
     return decryptedString 
 
+def decryptWholeString(msgBlocks):
+    #Decrypt each i in msgBlocks
+    for i in range(len(msgBlocks)):
+        print(msgBlocks[i])
+        msgBlocks[i] = decrypt(msgBlocks[i], d, n)
+        print(msgBlocks[i])
+    #Parse characters back out of msgBlocks
+    msg = ''
+    for i in msgBlocks:
+        for j in range(4):
+            msgInt = str(i)[ 3*j + 1 : 3*j + 4] #indexes past the leading '1'
+            msgInt = int(msgInt.lstrip('0')) #strips leading 0s from triples
+            msg += chr(msgInt)
+    msg = msg.rstrip('_')
+
+    return msg
 
 
 # test valuesss
@@ -101,3 +145,7 @@ d=generatePrivateKey(e,m)
 print("p"+str(p)+":q"+str(q)+" - e"+str(e))
 print(decryptString(encryptString("It works perfectly")))
 
+msg = 'Does this work for arbitrarily long strings...? What about funny characters like @%$#'
+encMsg = encryptWholeString(msg)
+print(encMsg)
+decryptWholeString(encMsg)
