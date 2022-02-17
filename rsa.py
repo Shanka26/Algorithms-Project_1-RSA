@@ -74,13 +74,13 @@ def encryptString(msg):
 
 def encryptWholeString(msg):
 
-    #Break string into 5-char blocks and place in list
+    #Break string into 4-char blocks and place in list
         #Pad message to multiple of 5 chars
     msgLen = len(msg)
     if msgLen % 4 != 0:
         msg = msg + '_' * (4 - (msgLen % 4))
     msgLen = len(msg)
-    
+
         #Slice blocks of message into list
     msgBlocks = []
     for i in range(msgLen//4):
