@@ -3,7 +3,7 @@ import rsa
 
 message_list = []
 def add_message(message, encrypted):
-        message_list.append([len(message_list) + 1, message, encrypted, 'Unsigned', '', []])
+        message_list.append([len(message_list) + 1, message, encrypted, 'Unsigned', [], []])
 
 close_menu = ''
 
@@ -57,10 +57,11 @@ while close_menu == '':
                         message_number = input('Invalid input. Select a message by number:\n')
                     message_number = int(message_number)
                     print(message_list[message_number-1][1])
-                    if message_list[message_number-1][4] == '':
+                    if len(message_list[message_number-1][4]) == 0:
                         print('Message has no digital signature\n')
                     else:
-                        if rsa.encryptString(message_list[message_number-1][4]) == 'Signed':
+                        ver = rsa.verifySignature(message_list[message_number-1][4])
+                        if ver == 'Signed':
                             print('Signature valid\n')
                         else:
                             print('Could not validate this signature')
@@ -121,10 +122,10 @@ while close_menu == '':
                                                     '(5) Exit Message Menu\n'
                                                 )
                         if message_op_inp == '1':
-                            if message_list[message_number-1][4] != '':
+                            if len(message_list[message_number-1][4]) != 0:
                                 print('Message already has a digital signature\n')
                             else:
-                                message_list[message_number-1][4] = rsa.decryptString('Signed')
+                                message_list[message_number-1][4] = rsa.signMessage('Signed')
                                 message_list[message_number-1][3] = 'Signed'
                                 print('Message signed\n')
                             message_op_inp = 'exit'
